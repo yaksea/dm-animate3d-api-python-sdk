@@ -151,12 +151,18 @@ class Animate3DClient:
 
             if response.status_code >= 400:
                 error_msg = f"API request failed with status {response.status_code}"
-                try:
-                    error_data = response.json()
-                    if "message" in error_data:
-                        error_msg = error_data["message"]
-                except (ValueError, KeyError):
-                    pass
+                content_type = response.headers.get("Content-Type", "")
+                if "json" in content_type:
+                    try:
+                        error_data = response.json()
+                        if "message" in error_data:
+                            error_msg = error_data["message"]
+                    except (ValueError, KeyError):
+                        pass
+                else:
+                    body = response.text.strip()
+                    if body:
+                        error_msg += ": " + body
 
                 raise APIError(error_msg, status_code=response.status_code)
 

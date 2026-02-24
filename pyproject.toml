@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dm-animate3d-api"
-version = "1.0.0-rc1"
+version = "1.0.0"
 description = "Animate 3D REST API Python SDK"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -42,10 +42,10 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/deepmotion/animate3d-python-sdk"
-Documentation = "https://github.com/deepmotion/animate3d-python-sdk"
-Repository = "https://github.com/deepmotion/animate3d-python-sdk"
-Issues = "https://github.com/deepmotion/animate3d-python-sdk/issues"
+Homepage = "https://github.com/yaksea/dm-animate3d-api-python-sdk"
+Documentation = "https://github.com/yaksea/dm-animate3d-api-python-sdk"
+Repository = "https://github.com/yaksea/dm-animate3d-api-python-sdk"
+Issues = "https://github.com/yaksea/dm-animate3d-api-python-sdk/issues"
 
 [tool.setuptools]
 packages = ["dm", "dm.animate3d", "dm.animate3d.data"]

@@ -3,7 +3,7 @@
 import asyncio
 import math
 import os
-from typing import List, Optional, Dict, Any, Callable, Union, Awaitable
+from typing import List, Optional, Dict, Any, Callable, Awaitable
 
 import aiohttp
 from aiohttp import BasicAuth
@@ -137,10 +137,10 @@ class AsyncAnimate3DClient:
 
             # Otherwise create a temporary session but share cookies
             async with aiohttp.ClientSession(
-                auth=self._auth,
-                timeout=self.timeout,
-                cookie_jar=self._cookie_jar,
-                trust_env=True,
+                    auth=self._auth,
+                    timeout=self.timeout,
+                    cookie_jar=self._cookie_jar,
+                    trust_env=True,
             ) as session:
                 if not self._authenticated:
                     await self._authenticate(session)
@@ -162,12 +162,18 @@ class AsyncAnimate3DClient:
         """Handle API response."""
         if response.status >= 400:
             error_msg = f"API request failed with status {response.status}"
-            try:
-                error_data = await response.json()
-                if "message" in error_data:
-                    error_msg = error_data["message"]
-            except (ValueError, KeyError, aiohttp.ContentTypeError):
-                pass
+            content_type = response.headers.get("Content-Type", "")
+            if "json" in content_type:
+                try:
+                    error_data = await response.json()
+                    if "message" in error_data:
+                        error_msg = error_data["message"]
+                except (ValueError, KeyError, aiohttp.ContentTypeError):
+                    pass
+            else:
+                body = (await response.text()).strip()
+                if body:
+                    error_msg += ": " + body
 
             raise APIError(error_msg, status_code=response.status)
 
@@ -264,12 +270,12 @@ class AsyncAnimate3DClient:
         return result["rid"]
 
     async def _poll_job(
-        self,
-        rid: str,
-        result_callback: Optional[Callable[[ResultCallbackData], Optional[Awaitable[None]]]] = None,
-        progress_callback: Optional[Callable[[ProgressCallbackData], Optional[Awaitable[None]]]] = None,
-        poll_interval: int = 5,
-        timeout: Optional[int] = None,
+            self,
+            rid: str,
+            result_callback: Optional[Callable[[ResultCallbackData], Optional[Awaitable[None]]]] = None,
+            progress_callback: Optional[Callable[[ProgressCallbackData], Optional[Awaitable[None]]]] = None,
+            poll_interval: int = 5,
+            timeout: Optional[int] = None,
     ) -> None:
         """Poll job status until completion."""
         import time
@@ -510,15 +516,15 @@ class AsyncAnimate3DClient:
         return result["modelId"]
 
     async def start_new_job(
-        self,
-        video_path: str,
-        params: Optional[ProcessParams] = None,
-        name: Optional[str] = None,
-        result_callback: Optional[Callable[[ResultCallbackData], Optional[Awaitable[None]]]] = None,
-        progress_callback: Optional[Callable[[ProgressCallbackData], Optional[Awaitable[None]]]] = None,
-        poll_interval: int = 5,
-        blocking: bool = True,
-        timeout: Optional[int] = None,
+            self,
+            video_path: str,
+            params: Optional[ProcessParams] = None,
+            name: Optional[str] = None,
+            result_callback: Optional[Callable[[ResultCallbackData], Optional[Awaitable[None]]]] = None,
+            progress_callback: Optional[Callable[[ProgressCallbackData], Optional[Awaitable[None]]]] = None,
+            poll_interval: int = 5,
+            blocking: bool = True,
+            timeout: Optional[int] = None,
     ) -> str:
         """Start a new animation job.
 
@@ -581,14 +587,14 @@ class AsyncAnimate3DClient:
         return data.get("count", 0)
 
     async def prepare_multi_person_job(
-        self,
-        video_path: str,
-        name: Optional[str] = None,
-        result_callback: Optional[Callable[[ResultCallbackData], Optional[Awaitable[None]]]] = None,
-        progress_callback: Optional[Callable[[ProgressCallbackData], Optional[Awaitable[None]]]] = None,
-        poll_interval: int = 5,
-        blocking: bool = True,
-        timeout: Optional[int] = None,
+            self,
+            video_path: str,
+            name: Optional[str] = None,
+            result_callback: Optional[Callable[[ResultCallbackData], Optional[Awaitable[None]]]] = None,
+            progress_callback: Optional[Callable[[ProgressCallbackData], Optional[Awaitable[None]]]] = None,
+            poll_interval: int = 5,
+            blocking: bool = True,
+            timeout: Optional[int] = None,
     ) -> str:
         """Prepare a multi-person job by detecting persons in video.
 
@@ -692,14 +698,14 @@ class AsyncAnimate3DClient:
         return rid
 
     async def rerun_job(
-        self,
-        rid: str,
-        params: Optional[ProcessParams] = None,
-        result_callback: Optional[Callable[[ResultCallbackData], Optional[Awaitable[None]]]] = None,
-        progress_callback: Optional[Callable[[ProgressCallbackData], Optional[Awaitable[None]]]] = None,
-        poll_interval: int = 5,
-        blocking: bool = True,
-        timeout: Optional[int] = None,
+            self,
+            rid: str,
+            params: Optional[ProcessParams] = None,
+            result_callback: Optional[Callable[[ResultCallbackData], Optional[Awaitable[None]]]] = None,
+            progress_callback: Optional[Callable[[ProgressCallbackData], Optional[Awaitable[None]]]] = None,
+            poll_interval: int = 5,
+            blocking: bool = True,
+            timeout: Optional[int] = None,
     ) -> str:
         """Rerun a previous job with different parameters.
 
