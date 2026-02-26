@@ -68,30 +68,6 @@ if model_id:
     print(f"Job finished, RID: {rid}")
 ```
 
-### Non-blocking Mode Usage
-
-You can use the `blocking=False` parameter to make the SDK return immediately. This is useful for integration with GUIs or other event loops.
-
-```python
-# Start job in non-blocking mode
-rid = client.start_new_job(
-    "video.mp4",
-    params=params,
-    result_callback=on_result,
-    progress_callback=on_progress,
-    blocking=False  # Return immediately
-)
-
-# You must keep the main thread alive if using callbacks
-import time
-from dm.animate3d import Status
-while True:
-    status = client.get_job_status(rid).status
-    if status in [Status.SUCCESS, Status.FAILURE]:
-        break
-    time.sleep(5)
-```
-
 ### Asynchronous Usage
 
 ```python

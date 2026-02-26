@@ -814,7 +814,9 @@ class AsyncAnimate3DClient:
             self, download_link: DownloadLink, output_dir: str
     ) -> int:
         """Download files from download link."""
-        os.makedirs(output_dir, exist_ok=True)
+        output_dir_with_rid = os.path.join(
+            output_dir, download_link.rid)
+        os.makedirs(output_dir_with_rid, exist_ok=True)
 
         files_to_download = []
         for url_group in download_link.urls:
@@ -829,15 +831,15 @@ class AsyncAnimate3DClient:
 
                 if name == "all_characters":
                     output_file = os.path.join(
-                        output_dir, f"{download_link.rid}-{name}.{file_type}.zip"
+                        output_dir_with_rid, f"{name}.{file_type}.zip"
                     )
                 elif file_type == "mp4":
                     output_file = os.path.join(
-                        output_dir, f"{download_link.rid}-{name}.{file_type}"
+                        output_dir_with_rid, f"{name}.{file_type}"
                     )
                 else:
                     output_file = os.path.join(
-                        output_dir, f"{download_link.rid}-{name}.{file_type}.zip"
+                        output_dir_with_rid, f"{name}.{file_type}"
                     )
 
                 files_to_download.append((file_url, output_file))
@@ -871,7 +873,7 @@ class AsyncAnimate3DClient:
         finally:
             await connector.close()
 
-        print(f"Downloaded {count} files to {output_dir}")
+        print(f"Downloaded {count} files to {output_dir_with_rid}")
         return count
 
     # ==================== Account API ====================

@@ -848,7 +848,8 @@ class Animate3DClient:
 
     def _download_files(self, download_link: DownloadLink, output_dir: str) -> int:
         """Download files from download link."""
-        os.makedirs(output_dir, exist_ok=True)
+        output_dir_with_rid = os.path.join(output_dir, download_link.rid)
+        os.makedirs(output_dir_with_rid, exist_ok=True)
 
         session = self._get_session()
 
@@ -867,15 +868,15 @@ class Animate3DClient:
                 # Determine output filename
                 if name == "all_characters":
                     output_file = os.path.join(
-                        output_dir, f"{download_link.rid}-{name}.{file_type}.zip"
+                        output_dir_with_rid, f"{name}.{file_type}.zip"
                     )
                 elif file_type == "mp4":
                     output_file = os.path.join(
-                        output_dir, f"{download_link.rid}-{name}.{file_type}"
+                        output_dir_with_rid, f"{name}.{file_type}"
                     )
                 else:
                     output_file = os.path.join(
-                        output_dir, f"{download_link.rid}-{name}.{file_type}.zip"
+                        output_dir_with_rid, f"{name}.{file_type}"
                     )
 
                 # Download file
@@ -886,7 +887,7 @@ class Animate3DClient:
                     f.write(file_response.content)
                 count += 1
 
-        print(f"Downloaded {count} files to {output_dir}")
+        print(f"Downloaded {count} files to {output_dir_with_rid}")
         return count
 
     # ==================== Account API ====================
